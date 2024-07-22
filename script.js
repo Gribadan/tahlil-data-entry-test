@@ -4,7 +4,7 @@ function submitForm(event) {
     const form = document.getElementById('custom-form');
     const formData = new FormData(form);
 
-    fetch('https://script.google.com/macros/s/1363jWrUT3rEWiCnQXn6bGDGyBs5koSv5b8AQbrksqK8/exec', {
+    fetch('https://script.google.com/macros/s/AKfycbwjUFh7hqMKkuwoqf1f8gIrRDNODfFb_vvGfKrG9A73ciOZyT6T0KAkHL_IoZtERC3T/exec', {
         method: 'POST',
         body: formData
     }).then(response => {
