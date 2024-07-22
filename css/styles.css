@@ -29,12 +29,11 @@ form {
     display: flex;
     align-items: center;
     gap: 10px;
-    flex: 1 1 100%;
+    flex: 1 1 48%; /* Two questions per row */
 }
 
 label {
     font-weight: bold;
-    min-width: 40px;
 }
 
 input[type="number"] {
