@@ -28,18 +28,21 @@ function generateDynamicForm() {
                         event.target.reportValidity();
                     } else {
                         event.target.setCustomValidity('');
-                        moveToNextInput(event);
+                        handleConditionalJump(event, question.conditionalJump);
                     }
                 } else if (event.key === 'Tab') {
                     event.preventDefault();
                 }
             });
-        } else if (question.type === 'id') {
-            input.setAttribute('type', 'text');
-            input.addEventListener('keydown', handleKeyDown);
         } else {
-            input.setAttribute('type', 'text');
-            input.addEventListener('keydown', handleKeyDown);
+            input.setAttribute('type', question.type === 'id' ? 'text' : question.type);
+            input.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    handleConditionalJump(event, question.conditionalJump);
+                } else if (event.key === 'Tab') {
+                    event.preventDefault();
+                }
+            });
         }
 
         div.appendChild(label);
@@ -76,19 +79,22 @@ function validateNumberInput(value, validation) {
     return errors.length === rules.length ? errors.join(' or ') : '';
 }
 
-function handleKeyDown(event) {
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        moveToNextInput(event);
-    } else if (event.key === 'Tab') {
-        event.preventDefault();
-    }
-}
-
-function moveToNextInput(event) {
+function handleConditionalJump(event, conditionalJump) {
     const form = document.getElementById('dynamic-form');
     const inputs = Array.from(form.querySelectorAll('input'));
     const currentIndex = inputs.indexOf(event.target);
+
+    if (conditionalJump) {
+        const [value, targetLabel] = conditionalJump.split(':');
+        if (event.target.value == value) {
+            const targetInput = inputs.find(input => input.id === `q${formConfig.findIndex(q => q.label === targetLabel) + 1}`);
+            if (targetInput) {
+                targetInput.focus();
+                return;
+            }
+        }
+    }
+
     if (currentIndex !== -1 && currentIndex < inputs.length - 1) {
         inputs[currentIndex + 1].focus();
     }
