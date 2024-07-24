@@ -22,7 +22,6 @@ function validateForm() {
 
 function submitForm(event) {
     event.preventDefault();
-    
     if (!validateForm()) {
         alert("Please correct the errors before submitting.");
         return;
