@@ -80,24 +80,32 @@ function validateNumberInput(value, validation) {
 }
 
 function handleConditionalJump(event, conditionalJump) {
+    console.log(`handleConditionalJump called with value: ${event.target.value} and conditionalJump: ${conditionalJump}`);
+
     const form = document.getElementById('dynamic-form');
     const inputs = Array.from(form.querySelectorAll('input'));
     const currentIndex = inputs.indexOf(event.target);
 
     if (conditionalJump) {
         const [value, targetLabel] = conditionalJump.split(':');
+        console.log(`Evaluating conditional jump: If value is ${value}, jump to ${targetLabel}`);
+
         if (event.target.value == value) {
             const targetIndex = formConfig.findIndex(q => q.label === targetLabel);
             if (targetIndex !== -1) {
                 const targetInput = inputs[targetIndex];
+                console.log(`Jumping to target question with label: ${targetLabel} at index: ${targetIndex}`);
                 if (targetInput) {
                     targetInput.focus();
                     return;
                 }
+            } else {
+                console.log(`Target label: ${targetLabel} not found in formConfig`);
             }
         }
     }
 
+    console.log('Moving to the next input field in sequence');
     if (currentIndex !== -1 && currentIndex < inputs.length - 1) {
         inputs[currentIndex + 1].focus();
     }
