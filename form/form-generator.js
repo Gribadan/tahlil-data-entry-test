@@ -97,6 +97,7 @@ function handleConditionalJump(event, conditionalJump) {
                 const targetInput = inputs[targetIndex];
                 console.log(`Jumping to target question with label: ${targetLabel} at index: ${targetIndex}`);
                 if (targetInput) {
+                    event.preventDefault();  // Prevent default action
                     targetInput.focus();
                     return;
                 }
@@ -108,6 +109,7 @@ function handleConditionalJump(event, conditionalJump) {
 
     console.log('Moving to the next input field in sequence');
     if (currentIndex !== -1 && currentIndex < inputs.length - 1) {
+        event.preventDefault();  // Prevent default action
         inputs[currentIndex + 1].focus();
     }
 }
