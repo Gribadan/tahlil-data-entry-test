@@ -73,3 +73,7 @@ button:hover {
 .action-btn:hover {
     background-color: #0056b3;
 }
+
+#success-message {
+    margin-top: 20px;
+}
