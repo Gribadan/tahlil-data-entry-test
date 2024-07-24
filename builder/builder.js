@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     loadFormConfig();
 });
 
-function addQuestion(label = '', type = 'text', validation = '') {
+function addQuestion(label = '', type = 'text', validation = '', conditionalJump = '') {
     questionCount++;
     const container = document.getElementById('questions-container');
     
@@ -29,6 +29,10 @@ function addQuestion(label = '', type = 'text', validation = '') {
             <div class="validation-options" style="display: ${type === 'number' ? 'block' : 'none'};">
                 <label>Validation (e.g., 1-5,10,15-20):</label>
                 <input type="text" class="question-validation" value="${validation}">
+            </div>
+            <div class="conditional-jump">
+                <label>Conditional Jump (e.g., 5:B7):</label>
+                <input type="text" class="conditional-jump-value" value="${conditionalJump}">
             </div>
             <button type="button" class="action-btn" onclick="deleteQuestion(${questionCount})">Delete</button>
         </div>
@@ -62,14 +66,17 @@ function moveQuestion(questionId, direction) {
         const tempLabel = questionDiv.querySelector('.question-label').value;
         const tempType = questionDiv.querySelector('.question-type').value;
         const tempValidation = questionDiv.querySelector('.question-validation').value;
+        const tempConditionalJump = questionDiv.querySelector('.conditional-jump-value').value;
         
         questionDiv.querySelector('.question-label').value = sibling.querySelector('.question-label').value;
         questionDiv.querySelector('.question-type').value = sibling.querySelector('.question-type').value;
         questionDiv.querySelector('.question-validation').value = sibling.querySelector('.question-validation').value;
+        questionDiv.querySelector('.conditional-jump-value').value = sibling.querySelector('.conditional-jump-value').value;
         
         sibling.querySelector('.question-label').value = tempLabel;
         sibling.querySelector('.question-type').value = tempType;
         sibling.querySelector('.question-validation').value = tempValidation;
+        sibling.querySelector('.conditional-jump-value').value = tempConditionalJump;
         
         toggleValidationOptions(questionId);
         toggleValidationOptions(parseInt(sibling.id.split('-')[1]));
@@ -94,8 +101,10 @@ function saveFormConfig() {
         const type = question.querySelector('.question-type').value;
         const validationInput = question.querySelector('.question-validation');
         const validation = validationInput ? validationInput.value : '';
+        const conditionalJumpInput = question.querySelector('.conditional-jump-value');
+        const conditionalJump = conditionalJumpInput ? conditionalJumpInput.value : '';
 
-        const questionConfig = { label, type, validation };
+        const questionConfig = { label, type, validation, conditionalJump };
         formConfig.push(questionConfig);
     });
 
@@ -107,7 +116,7 @@ function loadFormConfig() {
     if (savedConfig) {
         const formConfig = JSON.parse(savedConfig);
         formConfig.forEach((question) => {
-            addQuestion(question.label, question.type, question.validation);
+            addQuestion(question.label, question.type, question.validation, question.conditionalJump);
         });
     }
 }
