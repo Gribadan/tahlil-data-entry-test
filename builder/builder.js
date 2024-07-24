@@ -12,16 +12,18 @@ function addQuestion(label = '', type = 'text', validation = '') {
     questionDiv.classList.add('question');
 
     questionDiv.innerHTML = `
-        <label for="q${questionCount}-label">Question ${questionCount} Label:</label>
-        <input type="text" id="q${questionCount}-label" name="q${questionCount}-label" value="${label}" required>
-        <label for="q${questionCount}-type">Type:</label>
-        <select id="q${questionCount}-type" name="q${questionCount}-type" onchange="toggleValidationOptions(${questionCount})">
-            <option value="text" ${type === 'text' ? 'selected' : ''}>Text</option>
-            <option value="number" ${type === 'number' ? 'selected' : ''}>Number</option>
-        </select>
-        <div id="q${questionCount}-validation" class="validation-options" style="display: ${type === 'number' ? 'block' : 'none'};">
-            <label for="q${questionCount}-validation">Validation (e.g., 1-5,10,15-20):</label>
-            <input type="text" id="q${questionCount}-validation-input" name="q${questionCount}-validation" value="${validation}">
+        <div class="question-row">
+            <label for="q${questionCount}-label">Question ${questionCount} Label:</label>
+            <input type="text" id="q${questionCount}-label" name="q${questionCount}-label" value="${label}" required>
+            <label for="q${questionCount}-type">Type:</label>
+            <select id="q${questionCount}-type" name="q${questionCount}-type" onchange="toggleValidationOptions(${questionCount})">
+                <option value="text" ${type === 'text' ? 'selected' : ''}>Text</option>
+                <option value="number" ${type === 'number' ? 'selected' : ''}>Number</option>
+            </select>
+            <div id="q${questionCount}-validation" class="validation-options" style="display: ${type === 'number' ? 'block' : 'none'};">
+                <label for="q${questionCount}-validation-input">Validation (e.g., 1-5,10,15-20):</label>
+                <input type="text" id="q${questionCount}-validation-input" name="q${questionCount}-validation" value="${validation}">
+            </div>
         </div>
     `;
 
@@ -53,10 +55,7 @@ function generateForm() {
         formConfig.push(questionConfig);
     });
 
-    const formOutput = document.getElementById('form-output');
-    formOutput.value = JSON.stringify(formConfig, null, 2);
-    
-    localStorage.setItem('formConfig', formOutput.value);
+    localStorage.setItem('formConfig', JSON.stringify(formConfig));
 }
 
 function loadFormConfig() {
