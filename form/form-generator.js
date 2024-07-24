@@ -57,7 +57,6 @@ function generateDynamicForm() {
 }
 
 function validateNumberInput(value, validation) {
-    console.log(`Validating number input: value=${value}, validation=${validation}`);
     if (!validation) return '';
     const rules = validation.split(',').map(rule => rule.trim());
 
@@ -81,35 +80,32 @@ function validateNumberInput(value, validation) {
 }
 
 function handleConditionalJump(event, conditionalJump) {
-    console.log(`handleConditionalJump called with value: ${event.target.value} and conditionalJump: ${conditionalJump}`);
-
     const form = document.getElementById('dynamic-form');
     const inputs = Array.from(form.querySelectorAll('input'));
     const currentIndex = inputs.indexOf(event.target);
 
     if (conditionalJump) {
         const [value, targetLabel] = conditionalJump.split(':');
-        console.log(`Evaluating conditional jump: If value is ${value}, jump to ${targetLabel}`);
 
         if (event.target.value == value) {
             const targetIndex = formConfig.findIndex(q => q.label === targetLabel);
             if (targetIndex !== -1) {
                 const targetInput = inputs[targetIndex];
-                console.log(`Jumping to target question with label: ${targetLabel} at index: ${targetIndex}`);
                 if (targetInput) {
-                    event.preventDefault();  // Prevent default action
+                    // Disable all fields in between
+                    for (let i = currentIndex + 1; i < targetIndex; i++) {
+                        inputs[i].disabled = true;
+                    }
+                    event.preventDefault();
                     targetInput.focus();
                     return;
                 }
-            } else {
-                console.log(`Target label: ${targetLabel} not found in formConfig`);
             }
         }
     }
 
-    console.log('Moving to the next input field in sequence');
     if (currentIndex !== -1 && currentIndex < inputs.length - 1) {
-        event.preventDefault();  // Prevent default action
+        event.preventDefault();
         inputs[currentIndex + 1].focus();
     }
 }
