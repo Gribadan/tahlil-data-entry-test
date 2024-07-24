@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     loadFormConfig();
 });
 
-function addQuestion(label = '', type = 'text', min = '', max = '') {
+function addQuestion(label = '', type = 'text', validation = '') {
     questionCount++;
     const container = document.getElementById('questions-container');
     
@@ -20,10 +20,8 @@ function addQuestion(label = '', type = 'text', min = '', max = '') {
             <option value="number" ${type === 'number' ? 'selected' : ''}>Number</option>
         </select>
         <div id="q${questionCount}-validation" class="validation-options" style="display: ${type === 'number' ? 'block' : 'none'};">
-            <label for="q${questionCount}-min">Min:</label>
-            <input type="number" id="q${questionCount}-min" name="q${questionCount}-min" value="${min}">
-            <label for="q${questionCount}-max">Max:</label>
-            <input type="number" id="q${questionCount}-max" name="q${questionCount}-max" value="${max}">
+            <label for="q${questionCount}-validation">Validation (e.g., 1-5,10,15-20):</label>
+            <input type="text" id="q${questionCount}-validation-input" name="q${questionCount}-validation" value="${validation}">
         </div>
     `;
 
@@ -48,15 +46,9 @@ function generateForm() {
     questions.forEach((question, index) => {
         const label = question.querySelector(`#q${index + 1}-label`).value;
         const type = question.querySelector(`#q${index + 1}-type`).value;
-        const min = question.querySelector(`#q${index + 1}-min`).value;
-        const max = question.querySelector(`#q${index + 1}-max`).value;
+        const validation = question.querySelector(`#q${index + 1}-validation-input`).value;
 
-        const questionConfig = { label, type };
-        
-        if (type === 'number') {
-            questionConfig.min = min ? parseInt(min, 10) : null;
-            questionConfig.max = max ? parseInt(max, 10) : null;
-        }
+        const questionConfig = { label, type, validation };
 
         formConfig.push(questionConfig);
     });
@@ -72,7 +64,7 @@ function loadFormConfig() {
     if (savedConfig) {
         const formConfig = JSON.parse(savedConfig);
         formConfig.forEach((question) => {
-            addQuestion(question.label, question.type, question.min, question.max);
+            addQuestion(question.label, question.type, question.validation);
         });
     }
 }
