@@ -1,6 +1,4 @@
-const formConfig = [
-    // Paste the JSON from form-output textarea here
-];
+const formConfig = JSON.parse(localStorage.getItem('formConfig')) || [];
 
 function generateDynamicForm() {
     const form = document.getElementById('dynamic-form');
@@ -41,4 +39,6 @@ function generateDynamicForm() {
     form.appendChild(submitButton);
 }
 
-generateDynamicForm();
+document.addEventListener('DOMContentLoaded', (event) => {
+    generateDynamicForm();
+});
