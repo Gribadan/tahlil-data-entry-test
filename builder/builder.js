@@ -14,17 +14,17 @@ function addQuestion(label = '', type = 'text', validation = '') {
 
     questionDiv.innerHTML = `
         <div class="question-row">
-            <label for="q${questionCount}-label">Question ${questionCount} Label:</label>
-            <input type="text" id="q${questionCount}-label" name="q${questionCount}-label" value="${label}" required>
-            <label for="q${questionCount}-type">Type:</label>
-            <select id="q${questionCount}-type" name="q${questionCount}-type" onchange="toggleValidationOptions(${questionCount})">
+            <label>Question ${questionCount} Label:</label>
+            <input type="text" class="question-label" value="${label}" required>
+            <label>Type:</label>
+            <select class="question-type" onchange="toggleValidationOptions(${questionCount})">
                 <option value="text" ${type === 'text' ? 'selected' : ''}>Text</option>
                 <option value="number" ${type === 'number' ? 'selected' : ''}>Number</option>
                 <option value="id" ${type === 'id' ? 'selected' : ''}>ID</option>
             </select>
-            <div id="q${questionCount}-validation" class="validation-options" style="display: ${type === 'number' ? 'block' : 'none'};">
-                <label for="q${questionCount}-validation-input">Validation (e.g., 1-5,10,15-20):</label>
-                <input type="text" id="q${questionCount}-validation-input" name="q${questionCount}-validation" value="${validation}">
+            <div class="validation-options" style="display: ${type === 'number' ? 'block' : 'none'};">
+                <label>Validation (e.g., 1-5,10,15-20):</label>
+                <input type="text" class="question-validation" value="${validation}">
             </div>
             <button type="button" class="action-btn" onclick="deleteQuestion(${questionCount})">Delete</button>
             <button type="button" class="action-btn" onclick="moveQuestion(${questionCount}, -1)">Up</button>
@@ -36,8 +36,8 @@ function addQuestion(label = '', type = 'text', validation = '') {
 }
 
 function toggleValidationOptions(questionId) {
-    const typeSelect = document.getElementById(`q${questionId}-type`);
-    const validationOptions = document.getElementById(`q${questionId}-validation`);
+    const typeSelect = document.querySelector(`#question-${questionId} .question-type`);
+    const validationOptions = document.querySelector(`#question-${questionId} .validation-options`);
     
     if (typeSelect.value === 'number') {
         validationOptions.style.display = 'block';
@@ -49,7 +49,6 @@ function toggleValidationOptions(questionId) {
 function deleteQuestion(questionId) {
     const questionDiv = document.getElementById(`question-${questionId}`);
     questionDiv.remove();
-    saveFormConfig();
 }
 
 function moveQuestion(questionId, direction) {
@@ -58,23 +57,40 @@ function moveQuestion(questionId, direction) {
     const sibling = direction === -1 ? questionDiv.previousElementSibling : questionDiv.nextElementSibling;
     
     if (sibling && sibling.classList.contains('question')) {
-        container.insertBefore(questionDiv, direction === -1 ? sibling : sibling.nextElementSibling);
+        const tempLabel = questionDiv.querySelector('.question-label').value;
+        const tempType = questionDiv.querySelector('.question-type').value;
+        const tempValidation = questionDiv.querySelector('.question-validation').value;
+        
+        questionDiv.querySelector('.question-label').value = sibling.querySelector('.question-label').value;
+        questionDiv.querySelector('.question-type').value = sibling.querySelector('.question-type').value;
+        questionDiv.querySelector('.question-validation').value = sibling.querySelector('.question-validation').value;
+        
+        sibling.querySelector('.question-label').value = tempLabel;
+        sibling.querySelector('.question-type').value = tempType;
+        sibling.querySelector('.question-validation').value = tempValidation;
+        
+        toggleValidationOptions(questionId);
+        toggleValidationOptions(parseInt(sibling.id.split('-')[1]));
     }
-    saveFormConfig();
 }
 
 function updateForm() {
     saveFormConfig();
+    const successMessage = document.getElementById('success-message');
+    successMessage.style.display = 'block';
+    setTimeout(() => {
+        successMessage.style.display = 'none';
+    }, 3000);
 }
 
 function saveFormConfig() {
     const formConfig = [];
     const questions = document.querySelectorAll('.question');
 
-    questions.forEach((question, index) => {
-        const label = question.querySelector(`[name^="q"][name$="-label"]`).value;
-        const type = question.querySelector(`[name^="q"][name$="-type"]`).value;
-        const validationInput = question.querySelector(`[name^="q"][name$="-validation"]`);
+    questions.forEach((question) => {
+        const label = question.querySelector('.question-label').value;
+        const type = question.querySelector('.question-type').value;
+        const validationInput = question.querySelector('.question-validation');
         const validation = validationInput ? validationInput.value : '';
 
         const questionConfig = { label, type, validation };
