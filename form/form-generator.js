@@ -34,10 +34,6 @@ function generateDynamicForm() {
                     event.preventDefault();
                 }
             });
-
-            input.addEventListener('input', (event) => {
-                handleConditionalJump(event, question.conditionalJump, true);
-            });
         } else {
             input.setAttribute('type', question.type === 'id' ? 'text' : question.type);
             input.addEventListener('keydown', (event) => {
@@ -46,10 +42,6 @@ function generateDynamicForm() {
                 } else if (event.key === 'Tab') {
                     event.preventDefault();
                 }
-            });
-
-            input.addEventListener('input', (event) => {
-                handleConditionalJump(event, question.conditionalJump, true);
             });
         }
 
@@ -87,15 +79,13 @@ function validateNumberInput(value, validation) {
     return errors.length === rules.length ? errors.join(' or ') : '';
 }
 
-function handleConditionalJump(event, conditionalJump, isInput = false) {
+function handleConditionalJump(event, conditionalJump) {
     const form = document.getElementById('dynamic-form');
     const inputs = Array.from(form.querySelectorAll('input'));
     const currentIndex = inputs.indexOf(event.target);
 
-    // Re-enable all inputs if this is an input event (to re-evaluate the conditions)
-    if (isInput) {
-        inputs.forEach(input => input.disabled = false);
-    }
+    // Re-enable all inputs before checking conditions
+    inputs.forEach(input => input.disabled = false);
 
     if (conditionalJump) {
         const conditions = conditionalJump.split(',').map(cond => cond.trim());
