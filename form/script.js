@@ -6,9 +6,13 @@ function validateForm() {
         const input = form.querySelector(`#q${index + 1}`);
         if (question.type === 'number') {
             const value = parseInt(input.value, 10);
-            if ((question.min !== null && value < question.min) || (question.max !== null && value > question.max)) {
+            const validation = input.getAttribute('data-validation');
+            const error = validateNumberInput(value, validation);
+            if (error) {
                 isValid = false;
-                alert(`${question.label} must be between ${question.min} and ${question.max}`);
+                input.setCustomValidity(error);
+            } else {
+                input.setCustomValidity('');
             }
         }
     });
@@ -20,6 +24,12 @@ function submitForm(event) {
     event.preventDefault();
     
     if (!validateForm()) {
+        alert("Please correct the errors before submitting.");
+        return;
+    }
+
+    const confirmation = confirm("Are you sure you want to submit the form?");
+    if (!confirmation) {
         return;
     }
     
@@ -31,7 +41,7 @@ function submitForm(event) {
         body: formData
     }).then(response => {
         if (response.ok) {
-            alert('Form submitted successfully!');
+            document.getElementById('success-message').style.display = 'block';
             form.reset();
         } else {
             alert('Form submission failed.');
