@@ -11,7 +11,7 @@ body {
 
 .form-container {
     width: 90%;
-    max-width: 800px;
+    max-width: 1200px; /* Increased max-width to fit more questions in a single line */
     margin: auto;
     padding: 20px;
     background-color: #ffffff;
@@ -29,7 +29,7 @@ form {
     display: flex;
     align-items: center;
     gap: 10px;
-    flex: 1 1 48%; /* Two questions per row */
+    flex: 1 1 20%; /* Adjusted to fit more questions in a single line */
 }
 
 label {
