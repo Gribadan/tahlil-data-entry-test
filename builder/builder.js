@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     loadFormConfig();
 });
 
-function addQuestion(label = '', type = 'text', validation = '', block = '') {
+function addQuestion(label = '', type = 'text', validation = '') {
     questionCount++;
     const container = document.getElementById('questions-container');
     
@@ -14,8 +14,10 @@ function addQuestion(label = '', type = 'text', validation = '', block = '') {
 
     questionDiv.innerHTML = `
         <div class="question-row">
-            <label>Block:</label>
-            <input type="text" class="question-block" value="${block}" style="width: 50px;" required>
+            <div class="arrows">
+                <button type="button" class="arrow-btn" onclick="moveQuestion(${questionCount}, -1)">&#9650;</button>
+                <button type="button" class="arrow-btn" onclick="moveQuestion(${questionCount}, 1)">&#9660;</button>
+            </div>
             <label>Label:</label>
             <input type="text" class="question-label" value="${label}" required>
             <label>Type:</label>
@@ -29,8 +31,6 @@ function addQuestion(label = '', type = 'text', validation = '', block = '') {
                 <input type="text" class="question-validation" value="${validation}">
             </div>
             <button type="button" class="action-btn" onclick="deleteQuestion(${questionCount})">Delete</button>
-            <button type="button" class="action-btn" onclick="moveQuestion(${questionCount}, -1)">Up</button>
-            <button type="button" class="action-btn" onclick="moveQuestion(${questionCount}, 1)">Down</button>
         </div>
     `;
 
@@ -59,17 +59,14 @@ function moveQuestion(questionId, direction) {
     const sibling = direction === -1 ? questionDiv.previousElementSibling : questionDiv.nextElementSibling;
     
     if (sibling && sibling.classList.contains('question')) {
-        const tempBlock = questionDiv.querySelector('.question-block').value;
         const tempLabel = questionDiv.querySelector('.question-label').value;
         const tempType = questionDiv.querySelector('.question-type').value;
         const tempValidation = questionDiv.querySelector('.question-validation').value;
         
-        questionDiv.querySelector('.question-block').value = sibling.querySelector('.question-block').value;
         questionDiv.querySelector('.question-label').value = sibling.querySelector('.question-label').value;
         questionDiv.querySelector('.question-type').value = sibling.querySelector('.question-type').value;
         questionDiv.querySelector('.question-validation').value = sibling.querySelector('.question-validation').value;
         
-        sibling.querySelector('.question-block').value = tempBlock;
         sibling.querySelector('.question-label').value = tempLabel;
         sibling.querySelector('.question-type').value = tempType;
         sibling.querySelector('.question-validation').value = tempValidation;
@@ -93,13 +90,12 @@ function saveFormConfig() {
     const questions = document.querySelectorAll('.question');
 
     questions.forEach((question) => {
-        const block = question.querySelector('.question-block').value;
         const label = question.querySelector('.question-label').value;
         const type = question.querySelector('.question-type').value;
         const validationInput = question.querySelector('.question-validation');
         const validation = validationInput ? validationInput.value : '';
 
-        const questionConfig = { block, label, type, validation };
+        const questionConfig = { label, type, validation };
         formConfig.push(questionConfig);
     });
 
@@ -111,7 +107,7 @@ function loadFormConfig() {
     if (savedConfig) {
         const formConfig = JSON.parse(savedConfig);
         formConfig.forEach((question) => {
-            addQuestion(question.label, question.type, question.validation, question.block);
+            addQuestion(question.label, question.type, question.validation);
         });
     }
 }
