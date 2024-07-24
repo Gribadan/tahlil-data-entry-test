@@ -18,12 +18,16 @@ function generateDynamicForm() {
 
         if (question.type === 'number') {
             input.setAttribute('type', 'number');
-            if (question.min !== null) {
-                input.setAttribute('min', question.min);
-            }
-            if (question.max !== null) {
-                input.setAttribute('max', question.max);
-            }
+            input.setAttribute('data-validation', question.validation);
+
+            input.addEventListener('input', (event) => {
+                const error = validateNumberInput(event.target.value, question.validation);
+                if (error) {
+                    event.target.setCustomValidity(error);
+                } else {
+                    event.target.setCustomValidity('');
+                }
+            });
         } else {
             input.setAttribute('type', 'text');
         }
@@ -37,6 +41,29 @@ function generateDynamicForm() {
     submitButton.setAttribute('type', 'submit');
     submitButton.textContent = 'Submit';
     form.appendChild(submitButton);
+}
+
+function validateNumberInput(value, validation) {
+    if (!validation) return '';
+    const rules = validation.split(',').map(rule => rule.trim());
+
+    const errors = rules.map(rule => {
+        if (rule.includes('-')) {
+            const [min, max] = rule.split('-').map(Number);
+            if (value >= min && value <= max) {
+                return null;
+            }
+            return `Value must be between ${min} and ${max}`;
+        } else {
+            const exactValue = Number(rule);
+            if (value == exactValue) {
+                return null;
+            }
+            return `Value must be ${exactValue}`;
+        }
+    }).filter(error => error !== null);
+
+    return errors.length === rules.length ? errors.join(' or ') : '';
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
