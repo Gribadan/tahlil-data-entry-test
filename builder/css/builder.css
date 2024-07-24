@@ -42,6 +42,7 @@ body {
     display: flex;
     flex-direction: column;
     margin-right: 10px;
+    visibility: visible;
 }
 
 .arrow-btn {
@@ -50,6 +51,7 @@ body {
     border: none;
     cursor: pointer;
     font-size: 16px;
+    color: #000;
 }
 
 .arrow-btn:hover {
