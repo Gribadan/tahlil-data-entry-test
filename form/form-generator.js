@@ -21,7 +21,8 @@ function generateDynamicForm() {
             input.setAttribute('data-validation', question.validation);
 
             input.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter') {
+                if (event.key === 'Enter' || event.key === 'Tab') {
+                    event.preventDefault();
                     const error = validateNumberInput(event.target.value, question.validation);
                     if (error) {
                         event.target.setCustomValidity(error);
@@ -30,17 +31,14 @@ function generateDynamicForm() {
                         event.target.setCustomValidity('');
                         handleConditionalJump(event, question.conditionalJump);
                     }
-                } else if (event.key === 'Tab') {
-                    event.preventDefault();
                 }
             });
         } else {
             input.setAttribute('type', question.type === 'id' ? 'text' : question.type);
             input.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter') {
-                    handleConditionalJump(event, question.conditionalJump);
-                } else if (event.key === 'Tab') {
+                if (event.key === 'Enter' || event.key === 'Tab') {
                     event.preventDefault();
+                    handleConditionalJump(event, question.conditionalJump);
                 }
             });
         }
@@ -100,7 +98,6 @@ function handleConditionalJump(event, conditionalJump) {
                         for (let i = currentIndex + 1; i < targetIndex; i++) {
                             inputs[i].disabled = true;
                         }
-                        event.preventDefault();
                         targetInput.focus();
                         return;
                     }
@@ -110,7 +107,6 @@ function handleConditionalJump(event, conditionalJump) {
     }
 
     if (currentIndex !== -1 && currentIndex < inputs.length - 1) {
-        event.preventDefault();
         inputs[currentIndex + 1].focus();
     }
 }
