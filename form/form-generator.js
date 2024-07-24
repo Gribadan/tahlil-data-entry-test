@@ -1,4 +1,5 @@
 const formConfig = JSON.parse(localStorage.getItem('formConfig')) || [];
+
 function generateDynamicForm() {
     const form = document.getElementById('dynamic-form');
 
@@ -20,19 +21,25 @@ function generateDynamicForm() {
             input.setAttribute('data-validation', question.validation);
 
             input.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter' || event.key === 'Tab') {
+                if (event.key === 'Enter') {
                     const error = validateNumberInput(event.target.value, question.validation);
                     if (error) {
                         event.target.setCustomValidity(error);
+                        event.target.reportValidity();
                     } else {
                         event.target.setCustomValidity('');
+                        moveToNextInput(event);
                     }
+                } else if (event.key === 'Tab') {
+                    event.preventDefault();
                 }
             });
         } else if (question.type === 'id') {
             input.setAttribute('type', 'text');
+            input.addEventListener('keydown', handleKeyDown);
         } else {
             input.setAttribute('type', 'text');
+            input.addEventListener('keydown', handleKeyDown);
         }
 
         div.appendChild(label);
@@ -67,6 +74,24 @@ function validateNumberInput(value, validation) {
     }).filter(error => error !== null);
 
     return errors.length === rules.length ? errors.join(' or ') : '';
+}
+
+function handleKeyDown(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        moveToNextInput(event);
+    } else if (event.key === 'Tab') {
+        event.preventDefault();
+    }
+}
+
+function moveToNextInput(event) {
+    const form = document.getElementById('dynamic-form');
+    const inputs = Array.from(form.querySelectorAll('input'));
+    const currentIndex = inputs.indexOf(event.target);
+    if (currentIndex !== -1 && currentIndex < inputs.length - 1) {
+        inputs[currentIndex + 1].focus();
+    }
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
