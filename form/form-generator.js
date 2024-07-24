@@ -1,5 +1,4 @@
 const formConfig = JSON.parse(localStorage.getItem('formConfig')) || [];
-
 function generateDynamicForm() {
     const form = document.getElementById('dynamic-form');
 
