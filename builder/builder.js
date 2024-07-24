@@ -10,6 +10,7 @@ function addQuestion(label = '', type = 'text', validation = '') {
     
     const questionDiv = document.createElement('div');
     questionDiv.classList.add('question');
+    questionDiv.setAttribute('id', `question-${questionCount}`);
 
     questionDiv.innerHTML = `
         <div class="question-row">
@@ -19,11 +20,15 @@ function addQuestion(label = '', type = 'text', validation = '') {
             <select id="q${questionCount}-type" name="q${questionCount}-type" onchange="toggleValidationOptions(${questionCount})">
                 <option value="text" ${type === 'text' ? 'selected' : ''}>Text</option>
                 <option value="number" ${type === 'number' ? 'selected' : ''}>Number</option>
+                <option value="id" ${type === 'id' ? 'selected' : ''}>ID</option>
             </select>
             <div id="q${questionCount}-validation" class="validation-options" style="display: ${type === 'number' ? 'block' : 'none'};">
                 <label for="q${questionCount}-validation-input">Validation (e.g., 1-5,10,15-20):</label>
                 <input type="text" id="q${questionCount}-validation-input" name="q${questionCount}-validation" value="${validation}">
             </div>
+            <button type="button" onclick="deleteQuestion(${questionCount})">Delete</button>
+            <button type="button" onclick="moveQuestion(${questionCount}, -1)">Up</button>
+            <button type="button" onclick="moveQuestion(${questionCount}, 1)">Down</button>
         </div>
     `;
 
@@ -41,17 +46,38 @@ function toggleValidationOptions(questionId) {
     }
 }
 
+function deleteQuestion(questionId) {
+    const questionDiv = document.getElementById(`question-${questionId}`);
+    questionDiv.remove();
+    saveFormConfig();
+}
+
+function moveQuestion(questionId, direction) {
+    const container = document.getElementById('questions-container');
+    const questionDiv = document.getElementById(`question-${questionId}`);
+    const sibling = direction === -1 ? questionDiv.previousElementSibling : questionDiv.nextElementSibling;
+    
+    if (sibling && sibling.classList.contains('question')) {
+        container.insertBefore(questionDiv, direction === -1 ? sibling : sibling.nextElementSibling);
+    }
+    saveFormConfig();
+}
+
 function generateForm() {
+    saveFormConfig();
+}
+
+function saveFormConfig() {
     const formConfig = [];
     const questions = document.querySelectorAll('.question');
 
     questions.forEach((question, index) => {
-        const label = question.querySelector(`#q${index + 1}-label`).value;
-        const type = question.querySelector(`#q${index + 1}-type`).value;
-        const validation = question.querySelector(`#q${index + 1}-validation-input`).value;
+        const label = question.querySelector(`[name^="q"][name$="-label"]`).value;
+        const type = question.querySelector(`[name^="q"][name$="-type"]`).value;
+        const validationInput = question.querySelector(`[name^="q"][name$="-validation"]`);
+        const validation = validationInput ? validationInput.value : '';
 
         const questionConfig = { label, type, validation };
-
         formConfig.push(questionConfig);
     });
 
