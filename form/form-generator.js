@@ -34,6 +34,10 @@ function generateDynamicForm() {
                     event.preventDefault();
                 }
             });
+
+            input.addEventListener('input', (event) => {
+                handleConditionalJump(event, question.conditionalJump, true);
+            });
         } else {
             input.setAttribute('type', question.type === 'id' ? 'text' : question.type);
             input.addEventListener('keydown', (event) => {
@@ -42,6 +46,10 @@ function generateDynamicForm() {
                 } else if (event.key === 'Tab') {
                     event.preventDefault();
                 }
+            });
+
+            input.addEventListener('input', (event) => {
+                handleConditionalJump(event, question.conditionalJump, true);
             });
         }
 
@@ -79,26 +87,33 @@ function validateNumberInput(value, validation) {
     return errors.length === rules.length ? errors.join(' or ') : '';
 }
 
-function handleConditionalJump(event, conditionalJump) {
+function handleConditionalJump(event, conditionalJump, isInput = false) {
     const form = document.getElementById('dynamic-form');
     const inputs = Array.from(form.querySelectorAll('input'));
     const currentIndex = inputs.indexOf(event.target);
 
-    if (conditionalJump) {
-        const [value, targetLabel] = conditionalJump.split(':');
+    // Re-enable all inputs if this is an input event (to re-evaluate the conditions)
+    if (isInput) {
+        inputs.forEach(input => input.disabled = false);
+    }
 
-        if (event.target.value == value) {
-            const targetIndex = formConfig.findIndex(q => q.label === targetLabel);
-            if (targetIndex !== -1) {
-                const targetInput = inputs[targetIndex];
-                if (targetInput) {
-                    // Disable all fields in between
-                    for (let i = currentIndex + 1; i < targetIndex; i++) {
-                        inputs[i].disabled = true;
+    if (conditionalJump) {
+        const conditions = conditionalJump.split(',').map(cond => cond.trim());
+        for (const condition of conditions) {
+            const [value, targetLabel] = condition.split(':');
+            if (event.target.value == value) {
+                const targetIndex = formConfig.findIndex(q => q.label === targetLabel);
+                if (targetIndex !== -1) {
+                    const targetInput = inputs[targetIndex];
+                    if (targetInput) {
+                        // Disable all fields in between
+                        for (let i = currentIndex + 1; i < targetIndex; i++) {
+                            inputs[i].disabled = true;
+                        }
+                        event.preventDefault();
+                        targetInput.focus();
+                        return;
                     }
-                    event.preventDefault();
-                    targetInput.focus();
-                    return;
                 }
             }
         }
