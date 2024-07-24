@@ -28,7 +28,8 @@ body {
 
 .question-row > label,
 .question-row > input,
-.question-row > select {
+.question-row > select,
+.question-row > button {
     margin-right: 10px;
 }
 
@@ -45,4 +46,17 @@ body {
 .validation-options > label,
 .validation-options > input {
     margin-right: 10px;
+}
+
+button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
 }
