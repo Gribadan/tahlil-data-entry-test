@@ -1,6 +1,10 @@
 let questionCount = 0;
 
-function addQuestion() {
+document.addEventListener('DOMContentLoaded', (event) => {
+    loadFormConfig();
+});
+
+function addQuestion(label = '', type = 'text', min = '', max = '') {
     questionCount++;
     const container = document.getElementById('questions-container');
     
@@ -9,17 +13,17 @@ function addQuestion() {
 
     questionDiv.innerHTML = `
         <label for="q${questionCount}-label">Question ${questionCount} Label:</label>
-        <input type="text" id="q${questionCount}-label" name="q${questionCount}-label" required>
+        <input type="text" id="q${questionCount}-label" name="q${questionCount}-label" value="${label}" required>
         <label for="q${questionCount}-type">Type:</label>
         <select id="q${questionCount}-type" name="q${questionCount}-type" onchange="toggleValidationOptions(${questionCount})">
-            <option value="text">Text</option>
-            <option value="number">Number</option>
+            <option value="text" ${type === 'text' ? 'selected' : ''}>Text</option>
+            <option value="number" ${type === 'number' ? 'selected' : ''}>Number</option>
         </select>
-        <div id="q${questionCount}-validation" class="validation-options">
+        <div id="q${questionCount}-validation" class="validation-options" style="display: ${type === 'number' ? 'block' : 'none'};">
             <label for="q${questionCount}-min">Min:</label>
-            <input type="number" id="q${questionCount}-min" name="q${questionCount}-min">
+            <input type="number" id="q${questionCount}-min" name="q${questionCount}-min" value="${min}">
             <label for="q${questionCount}-max">Max:</label>
-            <input type="number" id="q${questionCount}-max" name="q${questionCount}-max">
+            <input type="number" id="q${questionCount}-max" name="q${questionCount}-max" value="${max}">
         </div>
     `;
 
@@ -59,4 +63,16 @@ function generateForm() {
 
     const formOutput = document.getElementById('form-output');
     formOutput.value = JSON.stringify(formConfig, null, 2);
+    
+    localStorage.setItem('formConfig', formOutput.value);
+}
+
+function loadFormConfig() {
+    const savedConfig = localStorage.getItem('formConfig');
+    if (savedConfig) {
+        const formConfig = JSON.parse(savedConfig);
+        formConfig.forEach((question) => {
+            addQuestion(question.label, question.type, question.min, question.max);
+        });
+    }
 }
