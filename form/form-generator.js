@@ -87,10 +87,13 @@ function handleConditionalJump(event, conditionalJump) {
     if (conditionalJump) {
         const [value, targetLabel] = conditionalJump.split(':');
         if (event.target.value == value) {
-            const targetInput = inputs.find(input => input.id === `q${formConfig.findIndex(q => q.label === targetLabel) + 1}`);
-            if (targetInput) {
-                targetInput.focus();
-                return;
+            const targetIndex = formConfig.findIndex(q => q.label === targetLabel);
+            if (targetIndex !== -1) {
+                const targetInput = inputs[targetIndex];
+                if (targetInput) {
+                    targetInput.focus();
+                    return;
+                }
             }
         }
     }
