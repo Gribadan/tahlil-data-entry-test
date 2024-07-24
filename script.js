@@ -1,18 +1,19 @@
 function validateForm() {
-    const q4 = document.getElementById('q4').value;
-    const q5 = document.getElementById('q5').value;
+    const form = document.getElementById('dynamic-form');
+    let isValid = true;
 
-    if (q4 < 1 || q4 > 5) {
-        alert('Q4 must be between 1 and 5');
-        return false;
-    }
+    formConfig.forEach((question, index) => {
+        const input = form.querySelector(`#q${index + 1}`);
+        if (question.type === 'number') {
+            const value = parseInt(input.value, 10);
+            if ((question.min !== null && value < question.min) || (question.max !== null && value > question.max)) {
+                isValid = false;
+                alert(`${question.label} must be between ${question.min} and ${question.max}`);
+            }
+        }
+    });
 
-    if (q5 < 1 || q5 > 11) {
-        alert('Q5 must be between 1 and 11');
-        return false;
-    }
-
-    return true;
+    return isValid;
 }
 
 function submitForm(event) {
@@ -22,7 +23,7 @@ function submitForm(event) {
         return;
     }
     
-    const form = document.getElementById('custom-form');
+    const form = document.getElementById('dynamic-form');
     const formData = new FormData(form);
 
     fetch('https://script.google.com/macros/s/AKfycbwjUFh7hqMKkuwoqf1f8gIrRDNODfFb_vvGfKrG9A73ciOZyT6T0KAkHL_IoZtERC3T/exec', {
