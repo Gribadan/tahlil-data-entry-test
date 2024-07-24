@@ -3,7 +3,6 @@ const formConfig = JSON.parse(localStorage.getItem('formConfig')) || [];
 function generateDynamicForm() {
     const form = document.getElementById('dynamic-form');
 
-    // Create form sections for each question
     formConfig.forEach((question, index) => {
         const div = document.createElement('div');
         div.classList.add('form-row');
@@ -21,12 +20,14 @@ function generateDynamicForm() {
             input.setAttribute('type', 'number');
             input.setAttribute('data-validation', question.validation);
 
-            input.addEventListener('input', (event) => {
-                const error = validateNumberInput(event.target.value, question.validation);
-                if (error) {
-                    event.target.setCustomValidity(error);
-                } else {
-                    event.target.setCustomValidity('');
+            input.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === 'Tab') {
+                    const error = validateNumberInput(event.target.value, question.validation);
+                    if (error) {
+                        event.target.setCustomValidity(error);
+                    } else {
+                        event.target.setCustomValidity('');
+                    }
                 }
             });
         } else if (question.type === 'id') {
