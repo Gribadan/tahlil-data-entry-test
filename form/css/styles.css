@@ -25,6 +25,15 @@ form {
     gap: 10px;
 }
 
+.form-block {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.form-block h2 {
+    margin-top: 0;
+}
+
 .form-row {
     display: flex;
     align-items: center;
