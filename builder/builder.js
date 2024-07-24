@@ -26,9 +26,9 @@ function addQuestion(label = '', type = 'text', validation = '') {
                 <label for="q${questionCount}-validation-input">Validation (e.g., 1-5,10,15-20):</label>
                 <input type="text" id="q${questionCount}-validation-input" name="q${questionCount}-validation" value="${validation}">
             </div>
-            <button type="button" onclick="deleteQuestion(${questionCount})">Delete</button>
-            <button type="button" onclick="moveQuestion(${questionCount}, -1)">Up</button>
-            <button type="button" onclick="moveQuestion(${questionCount}, 1)">Down</button>
+            <button type="button" class="action-btn" onclick="deleteQuestion(${questionCount})">Delete</button>
+            <button type="button" class="action-btn" onclick="moveQuestion(${questionCount}, -1)">Up</button>
+            <button type="button" class="action-btn" onclick="moveQuestion(${questionCount}, 1)">Down</button>
         </div>
     `;
 
@@ -63,7 +63,7 @@ function moveQuestion(questionId, direction) {
     saveFormConfig();
 }
 
-function generateForm() {
+function updateForm() {
     saveFormConfig();
 }
 
