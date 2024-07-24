@@ -19,12 +19,30 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-#form-output {
-    width: 100%;
-    height: 200px;
-    margin-top: 20px;
+.question-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.question-row > label,
+.question-row > input,
+.question-row > select {
+    margin-right: 10px;
+}
+
+.question-row > input,
+.question-row > select {
+    flex: 1;
 }
 
 .validation-options {
-    margin-top: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.validation-options > label,
+.validation-options > input {
+    margin-right: 10px;
 }
