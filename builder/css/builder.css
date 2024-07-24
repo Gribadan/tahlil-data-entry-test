@@ -11,7 +11,7 @@ body {
 
 .builder-container {
     width: 100%;
-    max-width: 800px;
+    max-width: 1000px;
     margin: auto;
     padding: 20px;
     background-color: #ffffff;
@@ -21,7 +21,7 @@ body {
 
 .question-row {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
     margin-bottom: 10px;
 }
