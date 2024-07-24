@@ -2,7 +2,7 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
     margin: 0;
-    padding: 0;
+    padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11,7 +11,7 @@ body {
 
 .form-container {
     width: 90%;
-    max-width: 1000px;
+    max-width: 800px;
     margin: auto;
     padding: 20px;
     background-color: #ffffff;
@@ -23,15 +23,6 @@ form {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-}
-
-.form-block {
-    width: 100%;
-    margin-bottom: 20px;
-}
-
-.form-block h2 {
-    margin-top: 0;
 }
 
 .form-row {
