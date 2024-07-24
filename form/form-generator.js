@@ -57,6 +57,7 @@ function generateDynamicForm() {
 }
 
 function validateNumberInput(value, validation) {
+    console.log(`Validating number input: value=${value}, validation=${validation}`);
     if (!validation) return '';
     const rules = validation.split(',').map(rule => rule.trim());
 
