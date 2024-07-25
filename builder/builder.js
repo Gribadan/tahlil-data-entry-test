@@ -1,6 +1,10 @@
 let questionCount = 0;
+const urlParams = new URLSearchParams(window.location.search);
+const formName = urlParams.get('formName');
+const googleScriptURL = 'https://script.google.com/macros/s/AKfycbwv5PwhnWg7G8zDQaV5ONl7SdpPN5r7gkpxfJ0sYbn_AHmkjLwNkwqg9yqoVQA4w20K7Q/exec';
 
 document.addEventListener('DOMContentLoaded', (event) => {
+    document.getElementById('form-name').textContent = formName;
     loadFormConfig();
 });
 
@@ -108,15 +112,30 @@ function saveFormConfig() {
         formConfig.push(questionConfig);
     });
 
-    localStorage.setItem('formConfig', JSON.stringify(formConfig));
+    fetch(googleScriptURL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `formName=${formName}&formConfig=${JSON.stringify(formConfig)}`,
+    })
+    .then(response => response.text())
+    .then(result => {
+        console.log(result);
+        const successMessage = document.getElementById('success-message');
+        successMessage.style.display = 'block';
+        setTimeout(() => {
+            successMessage.style.display = 'none';
+        }, 3000);
+    });
 }
 
 function loadFormConfig() {
-    const savedConfig = localStorage.getItem('formConfig');
-    if (savedConfig) {
-        const formConfig = JSON.parse(savedConfig);
-        formConfig.forEach((question) => {
-            addQuestion(question.label, question.type, question.validation, question.conditionalJump);
+    fetch(`${googleScriptURL}?action=loadFormConfig&formName=${formName}`)
+        .then(response => response.json())
+        .then(config => {
+            config.forEach((question) => {
+                addQuestion(question.label, question.type, question.validation, question.conditionalJump);
+            });
         });
-    }
 }
