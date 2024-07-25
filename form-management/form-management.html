@@ -4,12 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Management</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/form-management.css">
 </head>
 <body>
     <h1>Form Management</h1>
-    <button id="create-form">Create New Form</button>
-    <div id="form-list"></div>
+    <div>
+        <label for="new-form-name">New Form Name:</label>
+        <input type="text" id="new-form-name">
+        <button onclick="createForm()">Create Form</button>
+    </div>
+    <h2>Existing Forms</h2>
+    <ul id="form-list">
+        <!-- Forms will be listed here -->
+    </ul>
     <script src="form-management.js"></script>
 </body>
 </html>
