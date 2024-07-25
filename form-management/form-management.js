@@ -1,6 +1,6 @@
 const googleScriptURL = 'https://script.google.com/macros/s/AKfycbwv5PwhnWg7G8zDQaV5ONl7SdpPN5r7gkpxfJ0sYbn_AHmkjLwNkwqg9yqoVQA4w20K7Q/exec';
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', (event) => {
     loadForms();
 });
 
@@ -9,15 +9,18 @@ function loadForms() {
         .then(response => response.json())
         .then(forms => {
             const formList = document.getElementById('form-list');
-            formList.innerHTML = '';
+            formList.innerHTML = ''; // Clear existing list
             forms.forEach(form => {
                 const listItem = document.createElement('li');
                 const link = document.createElement('a');
-                link.href = `../builder/builder.html?formName=${form}`;
+                link.href = `builder.html?formName=${encodeURIComponent(form)}`;
                 link.textContent = form;
                 listItem.appendChild(link);
                 formList.appendChild(listItem);
             });
+        })
+        .catch(error => {
+            console.error('Error loading forms:', error);
         });
 }
 
@@ -35,6 +38,9 @@ function createForm() {
         .then(result => {
             console.log(result);
             loadForms();
+        })
+        .catch(error => {
+            console.error('Error creating form:', error);
         });
     } else {
         alert('Please enter a form name.');
