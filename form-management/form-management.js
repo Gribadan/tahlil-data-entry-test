@@ -8,16 +8,20 @@ function loadForms() {
     fetch(`${googleScriptURL}?action=getForms`)
         .then(response => response.json())
         .then(forms => {
-            const formList = document.getElementById('form-list');
-            formList.innerHTML = ''; // Clear existing list
-            forms.forEach(form => {
-                const listItem = document.createElement('li');
-                const link = document.createElement('a');
-                link.href = `builder.html?formName=${encodeURIComponent(form)}`;
-                link.textContent = form;
-                listItem.appendChild(link);
-                formList.appendChild(listItem);
-            });
+            if (Array.isArray(forms)) {
+                const formList = document.getElementById('form-list');
+                formList.innerHTML = ''; // Clear existing list
+                forms.forEach(form => {
+                    const listItem = document.createElement('li');
+                    const link = document.createElement('a');
+                    link.href = `builder.html?formName=${encodeURIComponent(form)}`;
+                    link.textContent = form;
+                    listItem.appendChild(link);
+                    formList.appendChild(listItem);
+                });
+            } else {
+                console.error('Expected an array but got:', forms);
+            }
         })
         .catch(error => {
             console.error('Error loading forms:', error);
