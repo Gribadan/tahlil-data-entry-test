@@ -40,6 +40,12 @@ function fetchForms() {
     fetch(`${SCRIPT_URL}?action=fetchForms`)
         .then(response => response.json())
         .then(data => {
+            if (!data.forms) {
+                console.error('Error: No forms data found');
+                console.log('Response data:', data);
+                return;
+            }
+
             const formsContainer = document.getElementById('existing-forms');
             formsContainer.innerHTML = '';
 
