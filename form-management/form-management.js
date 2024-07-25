@@ -22,16 +22,21 @@ function loadForms() {
 }
 
 function createForm() {
-    const formName = document.getElementById('new-form-name').value;
-    if (!formName) {
-        alert('Please enter a form name');
-        return;
-    }
-
-    fetch(`${googleScriptURL}?action=createSheet&formName=${formName}`)
+    const newFormName = document.getElementById('new-form-name').value.trim();
+    if (newFormName) {
+        fetch(googleScriptURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `action=createForm&formName=${newFormName}`,
+        })
         .then(response => response.text())
         .then(result => {
-            alert(result);
+            console.log(result);
             loadForms();
         });
+    } else {
+        alert('Please enter a form name.');
+    }
 }
