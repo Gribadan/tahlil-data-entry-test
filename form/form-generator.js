@@ -1,8 +1,10 @@
-const formConfig = JSON.parse(localStorage.getItem('formConfig')) || [];
+const urlParams = new URLSearchParams(window.location.search);
+const formName = urlParams.get('formName');
+const googleScriptURL = 'https://script.google.com/macros/s/AKfycbwv5PwhnWg7G8zDQaV5ONl7SdpPN5r7gkpxfJ0sYbn_AHmkjLwNkwqg9yqoVQA4w20K7Q/exec';
+let formConfig = [];
 
 function generateDynamicForm() {
     const form = document.getElementById('dynamic-form');
-
     formConfig.forEach((question, index) => {
         const div = document.createElement('div');
         div.classList.add('form-row');
@@ -111,6 +113,17 @@ function handleConditionalJump(event, conditionalJump) {
     }
 }
 
+function loadFormConfig(formName) {
+    fetch(`${googleScriptURL}?action=loadFormConfig&formName=${formName}`)
+        .then(response => response.json())
+        .then(config => {
+            formConfig = config;
+            generateDynamicForm();
+        });
+}
+
 document.addEventListener('DOMContentLoaded', (event) => {
-    generateDynamicForm();
+    if (formName) {
+        loadFormConfig(formName);
+    }
 });
