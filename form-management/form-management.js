@@ -25,6 +25,7 @@ function createForm() {
     })
     .then(response => response.json())
     .then(data => {
+        console.log('Form creation response:', data); // Log the response for debugging
         if (data.success) {
             fetchForms();
         } else {
@@ -40,6 +41,7 @@ function fetchForms() {
     fetch(`${SCRIPT_URL}?action=fetchForms`)
         .then(response => response.json())
         .then(data => {
+            console.log('Fetched forms data:', data); // Log the fetched data for debugging
             if (!data.forms) {
                 console.error('Error: No forms data found');
                 console.log('Response data:', data);
